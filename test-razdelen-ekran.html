@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Проба: музеят до нас</title>
+<style>
+  :root { color-scheme: dark; }
+  body { font: 16px/1.5 system-ui, sans-serif; margin: 0; padding: 16px; background: #1E2026; color: #F0EEE9; }
+  main { max-width: 40rem; }
+  h1 { font-size: 1.3rem; margin: 0 0 8px; }
+  p { margin: 0 0 12px; }
+  label { display: block; margin: 12px 0 4px; font-weight: 700; }
+  input[type=text], input[type=number] { width: 100%; box-sizing: border-box; padding: 10px; font: inherit; border: 2px solid #8a8d96; border-radius: 8px; background: #fff; color: #1E2026; }
+  input[type=number] { width: 8rem; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 16px 0; }
+  button { font: inherit; font-weight: 700; padding: 10px 16px; min-height: 44px; border: 2px solid #F0EEE9; border-radius: 8px; background: transparent; color: #F0EEE9; cursor: pointer; }
+  button.main { background: #F5D547; border-color: #F5D547; color: #1E2026; }
+  button:focus-visible, input:focus-visible { outline: 3px solid #F5D547; outline-offset: 2px; }
+  #timer { font: 700 5rem/1 ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; margin: 16px 0 4px; transition: opacity 240ms; }
+  #timer.dim { opacity: 0.2; }
+  #timer.dim:hover { opacity: 1; }
+  #bar { height: 8px; background: #3a3d46; border-radius: 4px; overflow: hidden; }
+  #bar span { display: block; height: 100%; width: 100%; background: #F5D547; transform-origin: left; }
+  #state { min-height: 1.5em; font-weight: 700; }
+  .hint { background: #2a2d36; border-left: 4px solid #F5D547; padding: 10px 12px; border-radius: 4px; }
+  .muted { color: #b8bbc4; font-size: 0.9rem; }
+  @media (prefers-reduced-motion: reduce) { #timer { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Проба: музеят в другата половина на екрана</h1>
+  <p class="muted">Музеите не позволяват рамка, затова страницата им се отваря в <strong>отделен прозорец</strong>, наместен точно в дясната половина на екрана. Тази страница е в лявата половина и държи таймера.</p>
+
+  <label for="url">Адрес на творбата в сайта на музея</label>
+  <input id="url" type="text" inputmode="url" value="https://www.moma.org/collection/works/80249">
+
+  <label for="sec">Време за гледане (секунди; за проба сложи 15)</label>
+  <input id="sec" type="number" min="5" max="600" value="30">
+
+  <label><input id="snd" type="checkbox" checked> Звук при края</label>
+
+  <div class="row">
+    <button class="main" id="go" type="button">Започни: отвори музея вдясно</button>
+    <button id="test" type="button">Пробен звук</button>
+    <button id="pip" type="button">Мини таймер отгоре</button>
+    <button id="close" type="button">Затвори музея</button>
+  </div>
+
+  <div id="hint" class="hint" hidden></div>
+
+  <div id="timer" role="timer" aria-label="Оставащо време" class="">00:30</div>
+  <div id="bar" aria-hidden="true"><span id="fill"></span></div>
+  <p id="state" role="status" aria-live="polite"></p>
+  <p class="muted">Таймерът отстъпва до 20 % докато тече; мишката над него го връща. Краят се обявява със звук, с надпис, със смяна на заглавието на раздела и (на телефон) с кратка вибрация.</p>
+</main>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var museum = null, endAt = 0, raf = 0, total = 30, running = false, pipWin = null, ctx = null;
+
+  function audio() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      if (!ctx) ctx = new AC();
+      if (ctx.state === 'suspended') ctx.resume();
+      return ctx;
+    } catch (e) { return null; }
+  }
+  // two soft notes, the second a fifth above the first
+  function chime() {
+    try { if (navigator.vibrate) navigator.vibrate(200); } catch (e) {}
+    var c = audio(); if (!c) return;
+    var t0 = c.currentTime + 0.02;
+    [[523.25, 0, 0.6], [783.99, 0.28, 0.9]].forEach(function (n) {
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = 'sine'; o.frequency.value = n[0];
+      g.gain.setValueAtTime(0.0001, t0 + n[1]);
+      g.gain.exponentialRampToValueAtTime(0.2, t0 + n[1] + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + n[1] + n[2]);
+      o.connect(g); g.connect(c.destination);
+      o.start(t0 + n[1]); o.stop(t0 + n[1] + n[2] + 0.05);
+    });
+  }
+  function fmt(s) { s = Math.max(0, Math.ceil(s - 1e-9)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+  function show(msg) { $('hint').hidden = !msg; $('hint').textContent = msg || ''; }
+
+  function render(left) {
+    $('timer').textContent = fmt(left);
+    $('fill').style.transform = 'scaleX(' + Math.max(0, Math.min(1, left / total)) + ')';
+    if (pipWin && !pipWin.closed) { var n = pipWin.document.getElementById('n'); if (n) n.textContent = fmt(left); }
+  }
+  function tick() {
+    var left = (endAt - performance.now()) / 1000;
+    render(left);
+    if (left <= 0) { finish(); return; }
+    raf = requestAnimationFrame(tick);
+  }
+  function finish() {
+    running = false; cancelAnimationFrame(raf);
+    $('timer').classList.remove('dim');
+    $('state').textContent = 'Времето свърши. Върни се тук и напиши какво видя.';
+    document.title = '⏰ Времето свърши';
+    if ($('snd').checked) chime();
+    // a window put in front, so the end is seen even if the sound is off
+    try { window.focus(); } catch (e) {}
+  }
+
+  $('go').addEventListener('click', function () {
+    audio(); // the click unlocks the sound
+    var url = $('url').value.trim();
+    total = Math.max(5, Math.min(600, Number($('sec').value) || 30));
+    var L = (screen.availLeft || 0), T = (screen.availTop || 0), W = screen.availWidth, H = screen.availHeight, half = Math.floor(W / 2);
+    var features = 'popup=yes,noopener=no,left=' + (L + half) + ',top=' + T + ',width=' + half + ',height=' + H;
+    museum = window.open(url, 'museum', features);
+    if (!museum) { show('Браузърът блокира изскачащия прозорец. Погледни в адресната лента за значка „блокиран прозорец“, позволи го и натисни „Започни“ отново.'); return; }
+    // our own window to the left half: allowed only for a window a page opened itself, so for a normal tab this does nothing
+    var before = window.outerWidth;
+    try { window.moveTo(L, T); window.resizeTo(half, H); } catch (e) {}
+    setTimeout(function () {
+      if (Math.abs(window.outerWidth - half) > 60) {
+        show('Музеят е в дясната половина. Този раздел браузърът не позволява да бъде смалян от страницата — наместѝ го сам: Windows: Win + ←; Mac: задръж зеления бутон горе вляво и избери „Плочки отляво“; Chromebook: Alt + [ .');
+      } else { show(''); }
+    }, 500);
+    document.title = 'Проба: музеят до нас';
+    $('state').textContent = 'Гледай творбата. Таймерът върви.';
+    endAt = performance.now() + total * 1000;
+    running = true; cancelAnimationFrame(raf);
+    $('timer').classList.add('dim');
+    raf = requestAnimationFrame(tick);
+  });
+
+  $('test').addEventListener('click', function () { audio(); chime(); });
+  $('close').addEventListener('click', function () { if (museum && !museum.closed) museum.close(); });
+
+  // a small always-on-top window for the timer (Chrome and Edge on a computer): it stays above the museum page
+  $('pip').addEventListener('click', async function () {
+    if (!('documentPictureInPicture' in window)) { show('Мини таймер отгоре има само в Chrome и Edge на компютър. Тук не се поддържа.'); return; }
+    try {
+      pipWin = await window.documentPictureInPicture.requestWindow({ width: 220, height: 130 });
+      var d = pipWin.document;
+      d.body.style.cssText = 'margin:0;display:grid;place-items:center;height:100vh;background:#1E2026;color:#F0EEE9;font:700 3rem ui-monospace,Menlo,monospace';
+      var n = d.createElement('div'); n.id = 'n'; n.textContent = $('timer').textContent; d.body.appendChild(n);
+      show('');
+    } catch (e) { show('Мини таймерът не се отвори: ' + (e && e.message ? e.message : e)); }
+  });
+
+  render(Number($('sec').value) || 30);
+})();
+</script>
+</body>
+</html>
