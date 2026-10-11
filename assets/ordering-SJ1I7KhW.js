@@ -1,0 +1,1 @@
+const s="gallery.ordering.main",e=["Готика","Ренесанс","Барок","Неокласицизъм","Импресионизъм","Кубизъм","Баухаус","Сюрреализъм","Поп арт","Концептуално изкуство"],o={status:"legacy"},r=[],t={id:s,periods:e,review:o,sources:r};export{t as default,s as id,e as periods,o as review,r as sources};
