@@ -7,10 +7,54 @@
     <meta name="color-scheme" content="dark light" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Ракурс</title>
-    <script type="module" crossorigin src="./assets/index-BGd4LNaM.js"></script>
+    <style>
+      /* Only until the app starts (it replaces #boot): a dark page with a plain word, so a slow or a failed start is never a blank screen. The colours are those of tokens.css. */
+      html,
+      body {
+        margin: 0;
+        background: #1e2026;
+        color: #f5f2ec;
+      }
+      #boot {
+        max-width: 36rem;
+        margin: 0;
+        padding: 32px 20px;
+        font: 17px/1.5 system-ui, sans-serif;
+      }
+      #boot button {
+        margin-top: 16px;
+        min-height: 48px;
+        padding: 0 20px;
+        border: 2px solid #b6bbc4;
+        border-radius: 10px;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/index-ENxZIY-t.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CVcCEe28.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><p id="boot" role="status">Ракурс се зарежда…</p></div>
+    <noscript>Ракурс иска включен JavaScript в браузъра.</noscript>
+    <script>
+      // If the app has not started in 12 seconds, say what to do instead of leaving the wait without an end.
+      setTimeout(function () {
+        var boot = document.getElementById('boot');
+        if (!boot) return;
+        boot.textContent = 'Зареждането се бави или не успя. Опресни страницата (Ctrl+F5). Ако не помогне, провери връзката с интернет.';
+        var again = document.createElement('button');
+        again.type = 'button';
+        again.textContent = 'Опитай пак';
+        again.onclick = function () {
+          location.reload();
+        };
+        boot.appendChild(document.createElement('br'));
+        boot.appendChild(again);
+      }, 12000);
+    </script>
   </body>
 </html>
