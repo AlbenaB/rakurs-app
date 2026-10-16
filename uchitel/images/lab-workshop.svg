@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" width="400" height="250">
+  <!-- РАБОТИЛНИЦА: a fine yellow millimetre grid (a line every 10 units, a stronger one every 50), and the compass in a dark disc with a thin yellow edge -->
+  <defs>
+    <pattern id="mm" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M10 0H0V10" fill="none" stroke="#F5CD43" stroke-opacity="0.13" stroke-width="0.5" />
+    </pattern>
+    <pattern id="cm" width="50" height="50" patternUnits="userSpaceOnUse">
+      <rect width="50" height="50" fill="url(#mm)" />
+      <path d="M50 0H0V50" fill="none" stroke="#F5CD43" stroke-opacity="0.3" stroke-width="0.8" />
+    </pattern>
+    <radialGradient id="fade" cx="0.5" cy="0.5" r="0.62">
+      <stop offset="0.35" stop-color="#14161b" stop-opacity="0" />
+      <stop offset="1" stop-color="#14161b" stop-opacity="0.92" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="250" fill="#14161b" />
+  <rect width="400" height="250" fill="url(#cm)" />
+  <!-- the grid fades towards the edges, so the eye stays in the middle -->
+  <rect width="400" height="250" fill="url(#fade)" />
+  <!-- the disc and the compass -->
+  <circle cx="200" cy="125" r="46" fill="#0d0f13" stroke="#F5CD43" stroke-width="1.5" />
+  <g transform="translate(173.6 98.6) scale(2.2)" fill="none" stroke="#F5CD43" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" />
+  </g>
+</svg>

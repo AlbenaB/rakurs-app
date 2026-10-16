@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" width="400" height="250">
+  <!-- АРКАДА: a glowing yellow ring filled to 70 per cent, and the gamepad in a dark disc with a thin yellow edge -->
+  <defs>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" />
+    </filter>
+    <radialGradient id="back" cx="0.5" cy="0.5" r="0.7">
+      <stop offset="0" stop-color="#1d2028" />
+      <stop offset="1" stop-color="#14161b" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="250" fill="url(#back)" />
+  <!-- a quiet outer ring, for depth -->
+  <circle cx="200" cy="125" r="108" fill="none" stroke="#F5CD43" stroke-opacity="0.07" stroke-width="1" />
+  <!-- the track of the ring, and what is filled of it: 70 per cent of 2 * pi * 78 = 490.1 is 343.1 (it starts at the top and goes clockwise) -->
+  <circle cx="200" cy="125" r="78" fill="none" stroke="#F5CD43" stroke-opacity="0.16" stroke-width="10" />
+  <circle cx="200" cy="125" r="78" fill="none" stroke="#F5CD43" stroke-width="10" stroke-linecap="round" stroke-dasharray="343.1 147" transform="rotate(-90 200 125)" filter="url(#glow)" opacity="0.9" />
+  <circle cx="200" cy="125" r="78" fill="none" stroke="#F5CD43" stroke-width="10" stroke-linecap="round" stroke-dasharray="343.1 147" transform="rotate(-90 200 125)" />
+  <!-- the disc and the gamepad -->
+  <circle cx="200" cy="125" r="46" fill="#0d0f13" stroke="#F5CD43" stroke-width="1.5" />
+  <g transform="translate(173.6 98.6) scale(2.2)" fill="none" stroke="#F5CD43" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="6" x2="10" y1="11" y2="11" />
+    <line x1="8" x2="8" y1="9" y2="13" />
+    <line x1="15" x2="15.01" y1="12" y2="12" />
+    <line x1="18" x2="18.01" y1="10" y2="10" />
+    <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" />
+  </g>
+</svg>
