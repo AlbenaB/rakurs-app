@@ -1,0 +1,1 @@
+import{r as n,u as s}from"./index-B1SG6lY8.js";const r="(prefers-reduced-motion: reduce)",a=e=>{const t=window.matchMedia(r);return t.addEventListener("change",e),()=>t.removeEventListener("change",e)};function d(){const e=n.useSyncExternalStore(a,()=>window.matchMedia(r).matches,()=>!1),t=s(c=>c.calm);return e||t}export{d as u};
