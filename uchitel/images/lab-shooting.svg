@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" width="400" height="250">
+  <!-- СНИМАЧНА: the studio from above, as the blueprint of the pro simulator draws it — rings of 1, 2, 3 m, the bust in the middle, the camera at the foot,
+       a warm key and a cyan rim with their cones (drawn by code, 30.10.2026) -->
+  <defs>
+    <radialGradient id="fade" cx="0.5" cy="0.5" r="0.62">
+      <stop offset="0.35" stop-color="#14161b" stop-opacity="0" />
+      <stop offset="1" stop-color="#14161b" stop-opacity="0.92" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="250" fill="#14161b" />
+  <g fill="none" stroke="#F5CD43" stroke-opacity="0.22" stroke-width="1">
+    <circle cx="200" cy="125" r="40" />
+    <circle cx="200" cy="125" r="80" />
+    <circle cx="200" cy="125" r="120" />
+  </g>
+  <path d="M200 125 L118 58 L96 92 Z" fill="#ffb25c" fill-opacity="0.32" />
+  <path d="M200 125 L300 40 L318 66 Z" fill="#14d9ff" fill-opacity="0.3" />
+  <circle cx="106" cy="74" r="9" fill="#ffb25c" stroke="#14161b" stroke-width="2" />
+  <circle cx="309" cy="52" r="8" fill="#14d9ff" stroke="#14161b" stroke-width="2" />
+  <circle cx="200" cy="125" r="12" fill="#e9e6df" />
+  <rect x="187" y="222" width="26" height="14" rx="3" fill="#e9e6df" fill-opacity="0.7" />
+  <rect width="400" height="250" fill="url(#fade)" />
+</svg>
