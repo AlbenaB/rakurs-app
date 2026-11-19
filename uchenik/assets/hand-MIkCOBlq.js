@@ -1,1 +1,0 @@
-function c(){const t=new Map,n=new Set,r=()=>n.forEach(e=>e());return{set(e,s){t.get(e)!==s&&(t.set(e,s),r())},clear(e){t.delete(e)&&r()},get:e=>t.get(e),subscribe(e){return n.add(e),()=>n.delete(e)}}}export{c};
