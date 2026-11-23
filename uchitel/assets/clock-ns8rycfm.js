@@ -1,1 +1,0 @@
-function o(e,r,a,t=0){if(a<=0||r<=0)return 0;const n=Math.floor(Math.max(0,e)*r/1e3+1e-9);return((t+n)%a+a)%a}function h(e,r,a,t=0){const n=Math.floor(Math.max(0,e)*r/1e3+1e-9);return Math.min(a-1,Math.max(0,t)+n)}export{o as l,h as o};
