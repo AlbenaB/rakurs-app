@@ -1,0 +1,6 @@
+import{c as r}from"./index-DLc6ODwS.js";/**
+ * @license lucide-react v1.54.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const a={name:"image-plus",size:24,node:[["path",{d:"M16 5h6",key:"1vod17"}],["path",{d:"M19 2v6",key:"4bpg5p"}],["path",{d:"M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5",key:"1ue2ih"}],["path",{d:"m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21",key:"1xmnt7"}],["circle",{cx:"9",cy:"9",r:"2",key:"af1f0g"}]]};a.node;const g=r(a),o={png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",webp:"image/webp",gif:"image/gif",avif:"image/avif",bmp:"image/bmp"},s=e=>{var i,t;return((t=(i=/\.([a-z0-9]+)$/i.exec(e))==null?void 0:i[1])==null?void 0:t.toLowerCase())??""};function p(e){return e.type?e.type.startsWith("image/")?e.type:null:o[s(e.name)]??null}function f(e){for(let i=0;i<e.length;i++){const t=e[i],n=p(t);if(n)return t.type===n?t:new File([t],t.name,{type:n,lastModified:t.lastModified})}return null}function u(e){if(!e||!Array.from(e.types??[]).includes("Files"))return"none";const t=Array.from(e.items??[]).filter(n=>n.kind==="file");return t.length?t.some(n=>n.type.startsWith("image/"))?"image":t.every(n=>n.type!=="")?"other":"unknown":"unknown"}export{g as I,u as d,f};
